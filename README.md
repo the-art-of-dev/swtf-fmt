@@ -1,3 +1,3 @@
-# SWTF Formmater
+# SWTF Formatter
 
 *SWTF format tool*
