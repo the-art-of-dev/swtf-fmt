@@ -6,7 +6,8 @@
     "types": "dist/types/src/index.d.ts",
     "scripts": {
         "build": "rollup -c rollup.config.js",
-        "build:cli": "rollup -c rollup.config.cli.js",
+        "build:cli-rollup": "rollup -c rollup.config.cli.js",
+        "build:cli": "zx build-cli.mjs",
         "build:esm": "rollup -c rollup.config.esm.js",
         "test": "jest --collect-coverage",
         "lint": "eslint src/ test/"
