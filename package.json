@@ -1,7 +1,7 @@
 {
     "name": "swtf-fmt",
     "version": "1.0.0",
-    "description": "Formatter for SWTF",
+    "description": "SWTF Format Tool",
     "main": "dist/index.js",
     "types": "dist/types/src/index.d.ts",
     "scripts": {
