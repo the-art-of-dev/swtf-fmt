@@ -10,7 +10,10 @@
         "build:cli": "zx build-cli.mjs",
         "build:browser": "rollup -c rollup.config.browser.js",
         "test": "jest --collect-coverage",
-        "lint": "eslint src/ test/"
+        "test:build-coverage": "jest --coverage --no-color >test_coverage.txt",
+        "test:build": "jest --no-color 2>test_results.txt",
+        "lint": "eslint src/ test/",
+        "build:all": "zx build-all.mjs"
     },
     "keywords": [],
     "author": "",
@@ -28,6 +31,7 @@
         "eslint": "^8.7.0",
         "jest": "^27.4.7",
         "rollup": "^2.64.0",
+        "rollup-plugin-terser": "^7.0.2",
         "ts-jest": "^27.1.3",
         "tslib": "^2.3.1",
         "typescript": "^4.5.4"
