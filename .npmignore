@@ -6,3 +6,5 @@ build-cli.mjs
 jest.config.js
 rollup.config.*
 tsconfig.json
+node_modules
+coverage
