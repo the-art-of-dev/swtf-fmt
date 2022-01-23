@@ -52,7 +52,7 @@ const rawSwtf = `
 
     -    store: [borring]
             - food
-        - coffie
+        - coffee
     - work: [borring]
           - include e2e testing mechanism      [p: high]
         - improve load testing    [p: medium]
@@ -68,7 +68,7 @@ Code above will output:
 - Daily tasks 😐:
     - store: [borring]
         - food
-        - coffie
+        - coffee
     - work: [borring]
         - include e2e testing mechanism [p: high]
         - improve load testing [p: medium]
