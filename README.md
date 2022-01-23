@@ -38,7 +38,7 @@ Using CDN:
 ```
 or
 ```html
-<script src="https://unpkg.com/swtf-parser@latest/dist/bundle.min.js"></script>
+<script src="https://unpkg.com/swtf-fmt@latest/dist/bundle.min.js"></script>
 ```
 
 ## Usage
