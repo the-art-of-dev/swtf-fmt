@@ -7,10 +7,9 @@
 
 *SWTF formatting tool*
 
-[![asciicast](https://asciinema.org/a/h7lIldGtDB8ZpVMeskOrtcgyK.svg)](https://asciinema.org/a/h7lIldGtDB8ZpVMeskOrtcgyK)
-
 > ⚠️ This project is created to meet the needs of our development team. Our main focus currently won't be on maintainig this project.
 
+[![asciicast](https://asciinema.org/a/h7lIldGtDB8ZpVMeskOrtcgyK.svg)](https://asciinema.org/a/h7lIldGtDB8ZpVMeskOrtcgyK)
 
 ## Content
 - [SWTF Formatter](#swtf-formatter)
