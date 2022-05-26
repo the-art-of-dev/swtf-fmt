@@ -119,4 +119,6 @@ function formatSwtf(rawSwtf) {
     return fmt.format();
 }
 
+exports.SwtfFile = SwtfFile;
+exports.SwtfFileFormatter = SwtfFileFormatter;
 exports.formatSwtf = formatSwtf;

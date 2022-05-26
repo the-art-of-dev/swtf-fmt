@@ -6,3 +6,6 @@ export function formatSwtf(rawSwtf: string): string {
     const fmt = new SwtfFileFormatter(swtfFile);
     return fmt.format();
 }
+
+export { SwtfFile } from './swtfFile';
+export { SwtfFileFormatter } from './SwtfFileFormatter';
