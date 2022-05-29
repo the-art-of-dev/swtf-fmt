@@ -19,4 +19,8 @@ describe('Simple tests', () => {
         const output = `${day}.${month}.${year}.`;
         expect(formatSwtf('- Create formatter for SWTF [after: 3]\n')).toBe(`- Create formatter for SWTF [${output}]\n`);
     });
+
+    it('statuses', () => {
+        expect(formatSwtf('- [ready][in_progress][blocked][done]\n')).toBe('- [status: ready][status: in_progress][status: blocked][status: done]\n');
+    });
 });

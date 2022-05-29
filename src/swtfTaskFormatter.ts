@@ -25,7 +25,7 @@ export class SwtfTaskFormatter {
         const attrCmp = (a1: SwtfTaskAttribute, a2: SwtfTaskAttribute) => a1.index > a2.index ? 1 : -1;
         const attributesRaw = task.attributes.length ? ` ${task.attributes.sort(attrCmp).map(a => this._attributeToString(a)).join('')}` : '';
         const subTasksRaw = task.subTasks.map(t => this._taskToString(t)).join('');
-        return `${'    '.repeat(task.level)}- ${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
+        return `${'    '.repeat(task.level)}-${task.text ? ' ' : ''}${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
     }
 
     public applyMagicToAttributes(): void {

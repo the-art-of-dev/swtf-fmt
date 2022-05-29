@@ -88,7 +88,11 @@ After parsing `SWTF` input using `swtf-parser` all attributes are going throug a
 
 List of default magic attributes:
 
-| Value template     | Description | Compiled example |
-| ------------------ | ----------- | ---------------- |
-| `today`            |             | `26.05.2022.`    |
-| `after: {{value}}` |             | `28.05.2022.`    |
+| Value template     | Description | Compiled example     |
+| ------------------ | ----------- | -------------------- |
+| `today`            |             | `26.05.2022.`        |
+| `after: {{value}}` |             | `28.05.2022.`        |
+| `ready`            |             | `status: ready`       |
+| `in_progress`      |             | `status: in_progress` |
+| `blocked`          |             | `status: blocked`     |
+| `done`             |             | `status: done`        |

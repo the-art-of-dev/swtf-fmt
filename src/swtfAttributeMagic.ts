@@ -68,3 +68,15 @@ export const AfterSAM: SwtfAttributeMagic = {
         return magicAttr;
     }
 };
+
+export const StatusSAM: SwtfAttributeMagic = {
+    name: 'status',
+    applyMagic: (attr: SwtfTaskAttribute) => {
+        const magicAttr = { ...attr };
+        const statuses = ['ready', 'in_progress', 'blocked', 'done'];
+        if (!attr.name && statuses.includes(attr.value.toString())) {
+            magicAttr.name = 'status';
+        }
+        return magicAttr;
+    }
+};

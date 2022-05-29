@@ -1,4 +1,4 @@
-import { AfterSAM, SwtfAttributeMagicRegistry, TodaySAM } from './swtfAttributeMagic';
+import { AfterSAM, StatusSAM, SwtfAttributeMagicRegistry, TodaySAM } from './swtfAttributeMagic';
 import { SwtfFile } from './swtfFile';
 import { SwtfTaskFormatter } from './swtfTaskFormatter';
 
@@ -15,6 +15,7 @@ export class SwtfFileFormatter {
 
         registry.registerMagic(TodaySAM);
         registry.registerMagic(AfterSAM);
+        registry.registerMagic(StatusSAM);
 
         const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, registry));
 
