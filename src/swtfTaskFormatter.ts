@@ -28,8 +28,15 @@ export class SwtfTaskFormatter {
         return `${'    '.repeat(task.level)}-${task.text ? ' ' : ''}${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
     }
 
+    private _applyMagicAttributesToTask(task: SwtfTask): SwtfTask {
+        const newTask = { ...task };
+        newTask.attributes = newTask.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
+        newTask.subTasks = newTask.subTasks.map(st => this._applyMagicAttributesToTask(st));
+        return newTask;
+    }
+
     public applyMagicToAttributes(): void {
-        this._task.attributes = this._task.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
+        this._task = this._applyMagicAttributesToTask(this._task);
     }
 
     public normalizeLevel(): void {
