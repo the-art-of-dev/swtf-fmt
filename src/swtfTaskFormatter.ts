@@ -1,10 +1,13 @@
 import { SwtfTask, SwtfTaskAttribute } from 'swtf-parser';
+import { SwtfAttributeMagicRegistry } from './swtfAttributeMagic';
 
 export class SwtfTaskFormatter {
     private _task: SwtfTask;
+    private _attributeMagicRegistry: SwtfAttributeMagicRegistry;
 
-    constructor(task: SwtfTask) {
+    constructor(task: SwtfTask, attributeMagicRegistry: SwtfAttributeMagicRegistry) {
         this._task = task;
+        this._attributeMagicRegistry = attributeMagicRegistry;
     }
 
     private _normalizeTaskLevel(task: SwtfTask, parentLevel: number): SwtfTask {
@@ -25,13 +28,17 @@ export class SwtfTaskFormatter {
         return `${'    '.repeat(task.level)}- ${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
     }
 
+    public applyMagicToAttributes(): void {
+        this._task.attributes = this._task.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
+    }
+
     public normalizeLevel(): void {
         this._task = this._normalizeTaskLevel(this._task, -1);
     }
 
-
     public format(): void {
         this.normalizeLevel();
+        this.applyMagicToAttributes();
     }
 
     public toString = (): string => {

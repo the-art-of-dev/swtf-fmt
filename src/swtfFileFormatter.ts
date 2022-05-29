@@ -1,3 +1,4 @@
+import { AfterSAM, SwtfAttributeMagicRegistry, TodaySAM } from './swtfAttributeMagic';
 import { SwtfFile } from './swtfFile';
 import { SwtfTaskFormatter } from './swtfTaskFormatter';
 
@@ -10,7 +11,12 @@ export class SwtfFileFormatter {
     }
 
     public format(): string {
-        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t));
+        const registry = new SwtfAttributeMagicRegistry();
+
+        registry.registerMagic(TodaySAM);
+        registry.registerMagic(AfterSAM);
+
+        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, registry));
 
         for (const fmt of fmts) {
             fmt.format();
