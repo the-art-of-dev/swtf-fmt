@@ -72,12 +72,78 @@ class SwtfFile {
     }
 }
 
+const getMagicDate = (date) => {
+    const year = date.getFullYear() + '';
+    const month = ('0' + date.getMonth()).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return [year, month, day];
+};
+const getToday = () => {
+    const today = new Date();
+    return getMagicDate(today);
+};
+const getAfter = (days) => {
+    const dateAfter = new Date();
+    dateAfter.setDate(dateAfter.getDate() + days);
+    return getMagicDate(dateAfter);
+};
+class SwtfAttributeMagicRegistry {
+    constructor() {
+        this._magicAttributes = [];
+    }
+    registerMagic(magic) {
+        this._magicAttributes.push(magic);
+    }
+    applyMagic(attribute) {
+        let magicAttribute = Object.assign({}, attribute);
+        for (const magic of this._magicAttributes) {
+            magicAttribute = magic.applyMagic(magicAttribute);
+        }
+        return magicAttribute;
+    }
+}
+const TodaySAM = {
+    name: 'today',
+    applyMagic: (attr) => {
+        const magicAttr = Object.assign({}, attr);
+        if (magicAttr.value == 'today') {
+            const [y, m, d] = getToday();
+            magicAttr.value = `${d}.${m}.${y}.`;
+        }
+        return magicAttr;
+    }
+};
+const AfterSAM = {
+    name: 'after',
+    applyMagic: (attr) => {
+        const magicAttr = Object.assign({}, attr);
+        if (magicAttr.name == 'after' && !Number.isNaN(magicAttr.value.toString())) {
+            const [y, m, d] = getAfter(parseInt(magicAttr.value.toString()));
+            magicAttr.value = `${d}.${m}.${y}.`;
+            magicAttr.name = null;
+        }
+        return magicAttr;
+    }
+};
+const StatusSAM = {
+    name: 'status',
+    applyMagic: (attr) => {
+        const magicAttr = Object.assign({}, attr);
+        const statuses = ['ready', 'in_progress', 'blocked', 'done'];
+        if (!attr.name && statuses.includes(attr.value.toString())) {
+            magicAttr.name = 'status';
+        }
+        return magicAttr;
+    }
+};
+
 class SwtfTaskFormatter {
-    constructor(task) {
+    constructor(task, attributeMagicRegistry) {
         this.toString = () => {
             return this._taskToString(this._task);
         };
         this._task = task;
+        this._attributeMagicRegistry = attributeMagicRegistry;
     }
     _normalizeTaskLevel(task, parentLevel) {
         const newTask = Object.assign({}, task);
@@ -92,13 +158,17 @@ class SwtfTaskFormatter {
         const attrCmp = (a1, a2) => a1.index > a2.index ? 1 : -1;
         const attributesRaw = task.attributes.length ? ` ${task.attributes.sort(attrCmp).map(a => this._attributeToString(a)).join('')}` : '';
         const subTasksRaw = task.subTasks.map(t => this._taskToString(t)).join('');
-        return `${'    '.repeat(task.level)}- ${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
+        return `${'    '.repeat(task.level)}-${task.text ? ' ' : ''}${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
+    }
+    applyMagicToAttributes() {
+        this._task.attributes = this._task.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
     }
     normalizeLevel() {
         this._task = this._normalizeTaskLevel(this._task, -1);
     }
     format() {
         this.normalizeLevel();
+        this.applyMagicToAttributes();
     }
 }
 
@@ -107,7 +177,11 @@ class SwtfFileFormatter {
         this._file = file;
     }
     format() {
-        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t));
+        const registry = new SwtfAttributeMagicRegistry();
+        registry.registerMagic(TodaySAM);
+        registry.registerMagic(AfterSAM);
+        registry.registerMagic(StatusSAM);
+        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, registry));
         for (const fmt of fmts) {
             fmt.format();
         }
