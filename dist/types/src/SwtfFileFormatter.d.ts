@@ -1,6 +1,10 @@
 import { SwtfFile } from './swtfFile';
+export interface SwtfFileFormatterOptions {
+    useMagic?: boolean;
+}
 export declare class SwtfFileFormatter {
     private _file;
-    constructor(file: SwtfFile);
+    private _options;
+    constructor(file: SwtfFile, options?: SwtfFileFormatterOptions);
     format(): string;
 }

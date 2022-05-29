@@ -158,8 +158,14 @@ class SwtfTaskFormatter {
         const subTasksRaw = task.subTasks.map(t => this._taskToString(t)).join('');
         return `${'    '.repeat(task.level)}-${task.text ? ' ' : ''}${task.text.trim()}${attributesRaw}\n${subTasksRaw}`;
     }
+    _applyMagicAttributesToTask(task) {
+        const newTask = Object.assign({}, task);
+        newTask.attributes = newTask.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
+        newTask.subTasks = newTask.subTasks.map(st => this._applyMagicAttributesToTask(st));
+        return newTask;
+    }
     applyMagicToAttributes() {
-        this._task.attributes = this._task.attributes.map(ma => this._attributeMagicRegistry.applyMagic(ma));
+        this._task = this._applyMagicAttributesToTask(this._task);
     }
     normalizeLevel() {
         this._task = this._normalizeTaskLevel(this._task, -1);
@@ -171,14 +177,18 @@ class SwtfTaskFormatter {
 }
 
 class SwtfFileFormatter {
-    constructor(file) {
+    constructor(file, options) {
         this._file = file;
+        this._options = options;
     }
     format() {
+        var _a;
         const registry = new SwtfAttributeMagicRegistry();
-        registry.registerMagic(TodaySAM);
-        registry.registerMagic(AfterSAM);
-        registry.registerMagic(StatusSAM);
+        if ((_a = this._options) === null || _a === void 0 ? void 0 : _a.useMagic) {
+            registry.registerMagic(TodaySAM);
+            registry.registerMagic(AfterSAM);
+            registry.registerMagic(StatusSAM);
+        }
         const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, registry));
         for (const fmt of fmts) {
             fmt.format();
@@ -187,9 +197,9 @@ class SwtfFileFormatter {
     }
 }
 
-function formatSwtf(rawSwtf) {
+function formatSwtf(rawSwtf, options) {
     const swtfFile = new SwtfFile({ content: rawSwtf });
-    const fmt = new SwtfFileFormatter(swtfFile);
+    const fmt = new SwtfFileFormatter(swtfFile, options);
     return fmt.format();
 }
 

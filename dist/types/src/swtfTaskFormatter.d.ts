@@ -7,6 +7,7 @@ export declare class SwtfTaskFormatter {
     private _normalizeTaskLevel;
     private _attributeToString;
     private _taskToString;
+    private _applyMagicAttributesToTask;
     applyMagicToAttributes(): void;
     normalizeLevel(): void;
     format(): void;
