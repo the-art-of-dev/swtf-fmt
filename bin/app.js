@@ -72,6 +72,10 @@ class SwtfFile {
     }
 }
 
+const isNumeric = (x) => {
+    return /^-?\d+$/.test(x);
+};
+
 const getMagicDate = (date) => {
     const year = date.getFullYear() + '';
     const month = ('0' + date.getMonth()).slice(-2);
@@ -136,6 +140,21 @@ const StatusSAM = {
         return magicAttr;
     }
 };
+const PrioritySAM = {
+    name: 'status',
+    applyMagic: (attr) => {
+        const magicAttr = Object.assign({}, attr);
+        const valueParts = magicAttr.value.toString().split('p');
+        if (valueParts.length != 2)
+            return magicAttr;
+        const [indicator, value] = valueParts;
+        if (!attr.name && indicator === '' && isNumeric(value)) {
+            magicAttr.name = 'priority';
+            magicAttr.value = value;
+        }
+        return magicAttr;
+    }
+};
 
 class SwtfTaskFormatter {
     constructor(task, attributeMagicRegistry) {
@@ -176,24 +195,60 @@ class SwtfTaskFormatter {
         this.normalizeLevel();
         this.applyMagicToAttributes();
     }
+    get task() {
+        return this._task;
+    }
 }
 
+var SwtfSortingOrder;
+(function (SwtfSortingOrder) {
+    SwtfSortingOrder["ASC"] = "asc";
+    SwtfSortingOrder["DESC"] = "desc";
+})(SwtfSortingOrder || (SwtfSortingOrder = {}));
+const createTaskFormatterComparer = (sortBy, sortOrder) => {
+    const sortByFilter = (a) => a.name == sortBy;
+    const taskComparer = (x, y) => {
+        const xAttr = x.task.attributes.find(sortByFilter);
+        const yAttr = y.task.attributes.find(sortByFilter);
+        if (!xAttr && !yAttr)
+            return 0;
+        if (!xAttr && yAttr)
+            return 1;
+        if (xAttr && !yAttr)
+            return -1;
+        const order = sortOrder == SwtfSortingOrder.ASC ? 1 : -1;
+        let diff = xAttr.value.toString().localeCompare(yAttr.value.toString());
+        if (isNumeric(xAttr.value.toString()) && isNumeric(yAttr.value.toString()))
+            diff = parseInt(xAttr.value.toString()) - parseInt(yAttr.value.toString());
+        return diff * order;
+    };
+    return taskComparer;
+};
 class SwtfFileFormatter {
     constructor(file, options) {
         this._file = file;
         this._options = options;
+        this._initRegistry();
+    }
+    _initRegistry() {
+        var _a;
+        this._magicRegistry = new SwtfAttributeMagicRegistry();
+        if (!((_a = this._options) === null || _a === void 0 ? void 0 : _a.useMagic))
+            return;
+        this._magicRegistry.registerMagic(TodaySAM);
+        this._magicRegistry.registerMagic(AfterSAM);
+        this._magicRegistry.registerMagic(StatusSAM);
+        this._magicRegistry.registerMagic(PrioritySAM);
     }
     format() {
-        var _a;
-        const registry = new SwtfAttributeMagicRegistry();
-        if ((_a = this._options) === null || _a === void 0 ? void 0 : _a.useMagic) {
-            registry.registerMagic(TodaySAM);
-            registry.registerMagic(AfterSAM);
-            registry.registerMagic(StatusSAM);
-        }
-        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, registry));
+        var _a, _b, _c;
+        const fmts = this._file.tasks.map(t => new SwtfTaskFormatter(t, this._magicRegistry));
         for (const fmt of fmts) {
             fmt.format();
+        }
+        if ((_b = (_a = this._options) === null || _a === void 0 ? void 0 : _a.sort) === null || _b === void 0 ? void 0 : _b.sortBy) {
+            this._options.sort.order = (_c = this._options.sort.order) !== null && _c !== void 0 ? _c : SwtfSortingOrder.ASC;
+            fmts.sort(createTaskFormatterComparer(this._options.sort.sortBy, this._options.sort.order));
         }
         return fmts.map(fmt => `${fmt}`).join('');
     }

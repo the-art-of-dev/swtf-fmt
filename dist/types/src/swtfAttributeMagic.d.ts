@@ -12,3 +12,4 @@ export declare class SwtfAttributeMagicRegistry {
 export declare const TodaySAM: SwtfAttributeMagic;
 export declare const AfterSAM: SwtfAttributeMagic;
 export declare const StatusSAM: SwtfAttributeMagic;
+export declare const PrioritySAM: SwtfAttributeMagic;

@@ -12,4 +12,5 @@ export declare class SwtfTaskFormatter {
     normalizeLevel(): void;
     format(): void;
     toString: () => string;
+    get task(): SwtfTask;
 }
