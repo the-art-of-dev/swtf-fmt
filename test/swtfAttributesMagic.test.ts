@@ -23,4 +23,8 @@ describe('Simple tests', () => {
     it('statuses', () => {
         expect(formatSwtf('- [ready][in_progress][blocked][done]\n', { useMagic: true })).toBe('- [status: ready][status: in_progress][status: blocked][status: done]\n');
     });
+
+    it('priority', () => {
+        expect(formatSwtf('- [p1][p2][pp2][epe2][priority: 5]\n', { useMagic: true })).toBe('- [priority: 1][priority: 2][pp2][epe2][priority: 5]\n');
+    });
 });

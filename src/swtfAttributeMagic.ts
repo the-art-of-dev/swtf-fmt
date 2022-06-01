@@ -1,4 +1,5 @@
 import { SwtfTaskAttribute } from 'swtf-parser';
+import { isNumeric } from './helpers';
 
 const getMagicDate = (date: Date): [string, string, string] => {
     const year = date.getFullYear() + '';
@@ -76,6 +77,23 @@ export const StatusSAM: SwtfAttributeMagic = {
         const statuses = ['ready', 'in_progress', 'blocked', 'done'];
         if (!attr.name && statuses.includes(attr.value.toString())) {
             magicAttr.name = 'status';
+        }
+        return magicAttr;
+    }
+};
+
+export const PrioritySAM: SwtfAttributeMagic = {
+    name: 'status',
+    applyMagic: (attr: SwtfTaskAttribute) => {
+        const magicAttr = { ...attr };
+        const valueParts = magicAttr.value.toString().split('p');
+
+        if(valueParts.length != 2) return magicAttr;
+
+        const [indicator, value] = valueParts;
+        if (!attr.name && indicator === '' && isNumeric(value)) {
+            magicAttr.name = 'priority';
+            magicAttr.value = value;
         }
         return magicAttr;
     }

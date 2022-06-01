@@ -51,4 +51,10 @@ export class SwtfTaskFormatter {
     public toString = (): string => {
         return this._taskToString(this._task);
     };
+
+
+    public get task(): SwtfTask {
+        return this._task;
+    }
+
 }
