@@ -16,7 +16,7 @@
   - [Installation](#installation)
   - [Usage](#usage)
   - [Magic attributes (*IN DEVELOPMENT*)](#magic-attributes-in-development)
-    - [How magic attributes work?](#how-magic-attributes-work)
+    - [How does magic attributes work?](#how-does-magic-attributes-work)
 
 ## Installation
 
@@ -82,7 +82,7 @@ Use magic attributes to boost your experience of writing tasks in SWTF.
 
 Magic attributes are way to enhance SWTF formatting. By default `swtf-fmt` provides set of magic attributes that can help you in managing and organizing your tasklists.
 
-### How magic attributes work?
+### How does magic attributes work?
 
 After parsing `SWTF` input using `swtf-parser` all attributes are going throug all registred `Attribute Magic` instances. `Attribute Magic` is process of handling *special* attribute names or values to enhance your SWTF experience.
 
